@@ -1,0 +1,45 @@
+<nav class="bg-blue-600 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <a routerLink="/dashboard" class="text-white text-xl font-bold">
+          🏙️ Civic Issue Reporter
+        </a>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <a 
+          routerLink="/dashboard" 
+          routerLinkActive="bg-blue-700"
+          class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+        >
+          All Issues
+        </a>
+        <a 
+          routerLink="/my-issues" 
+          routerLinkActive="bg-blue-700"
+          class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+        >
+          My Issues
+        </a>
+        <a 
+          routerLink="/report-issue" 
+          routerLinkActive="bg-blue-700"
+          class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+        >
+          Report Issue
+        </a>
+        
+        <div *ngIf="authService.currentUser | async as user" class="flex items-center space-x-3">
+          <span class="text-white text-sm">{{ user.email }}</span>
+          <button 
+            (click)="logout()"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
