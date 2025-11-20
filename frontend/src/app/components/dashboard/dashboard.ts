@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch(status) {
+    switch (status) {
       case 'Pending': return 'bg-yellow-100 text-yellow-800';
       case 'In Progress': return 'bg-blue-100 text-blue-800';
       case 'Resolved': return 'bg-green-100 text-green-800';
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getPriorityColor(priority: string): string {
-    switch(priority) {
+    switch (priority) {
       case 'High': return 'bg-red-100 text-red-800';
       case 'Medium': return 'bg-orange-100 text-orange-800';
       case 'Low': return 'bg-green-100 text-green-800';

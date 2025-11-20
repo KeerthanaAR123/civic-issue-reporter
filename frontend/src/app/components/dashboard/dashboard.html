@@ -7,56 +7,95 @@
       <p class="mt-2 text-gray-600">View and track all reported civic issues in your area</p>
     </div>
 
+    <!-- Loading state -->
     <div *ngIf="isLoading" class="text-center py-12">
       <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       <p class="mt-4 text-gray-600">Loading issues...</p>
     </div>
 
+    <!-- Error message -->
     <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
       {{ errorMessage }}
     </div>
 
+    <!-- Empty state -->
     <div *ngIf="!isLoading && issues.length === 0" class="text-center py-12 bg-white rounded-lg shadow">
       <p class="text-gray-500 text-lg">No issues reported yet</p>
-      <a routerLink="/report-issue" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
+      <a
+        routerLink="/report-issue"
+        class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+      >
         Report First Issue
       </a>
     </div>
 
+    <!-- Issues grid -->
     <div *ngIf="!isLoading && issues.length > 0" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <div *ngFor="let issue of issues" class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+      <div
+        *ngFor="let issue of issues"
+        class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+      >
         <div class="p-6">
           <div class="flex justify-between items-start mb-4">
-            <h3 class="text-xl font-semibold text-gray-900 flex-1">{{ issue.title }}</h3>
-            <span [class]="getStatusColor(issue.status)" class="px-3 py-1 rounded-full text-xs font-semibold">
+            <h3 class="text-xl font-semibold text-gray-900 flex-1">
+              {{ issue.title }}
+            </h3>
+            <span
+              [class]="getStatusColor(issue.status)"
+              class="px-3 py-1 rounded-full text-xs font-semibold"
+            >
               {{ issue.status }}
             </span>
           </div>
 
-          <p class="text-gray-600 mb-4 line-clamp-3">{{ issue.description }}</p>
+          <p class="text-gray-600 mb-4 line-clamp-3">
+            {{ issue.description }}
+          </p>
 
           <div class="space-y-2 mb-4">
+            <!-- Category -->
             <div class="flex items-center text-sm text-gray-500">
               <span class="font-semibold mr-2">Category:</span>
-              <span class="bg-gray-100 px-2 py-1 rounded">{{ issue.category }}</span>
+              <span class="bg-gray-100 px-2 py-1 rounded">
+                {{ issue.category }}
+              </span>
             </div>
+
+            <!-- Optional subcategory display (if present) -->
+            <div class="flex items-center text-sm text-gray-500" *ngIf="issue.subCategory">
+              <span class="font-semibold mr-2">Subcategory:</span>
+              <span class="bg-gray-100 px-2 py-1 rounded">
+                {{ issue.subCategory }}
+              </span>
+            </div>
+
+            <!-- Location -->
             <div class="flex items-center text-sm text-gray-500">
               <span class="font-semibold mr-2">Location:</span>
               <span>{{ issue.location }}</span>
             </div>
+
+            <!-- Priority -->
             <div class="flex items-center text-sm text-gray-500">
               <span class="font-semibold mr-2">Priority:</span>
-              <span [class]="getPriorityColor(issue.priority)" class="px-2 py-1 rounded text-xs font-semibold">
+              <span
+                [class]="getPriorityColor(issue.priority)"
+                class="px-2 py-1 rounded text-xs font-semibold"
+              >
                 {{ issue.priority }}
               </span>
             </div>
+
+            <!-- Reported by -->
             <div class="flex items-center text-sm text-gray-500">
               <span class="font-semibold mr-2">Reported by:</span>
               <span>{{ issue.reportedBy?.email }}</span>
             </div>
+
+            <!-- Date -->
             <div class="flex items-center text-sm text-gray-500">
               <span class="font-semibold mr-2">Date:</span>
-              <span>{{ issue.reportedAt | date:'short' }}</span>
+              <span>{{ issue.reportedAt | date: 'short' }}</span>
             </div>
           </div>
         </div>

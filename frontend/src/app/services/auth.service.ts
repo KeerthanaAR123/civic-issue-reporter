@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '../models/user.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import {
+  AuthResponse,
+  LoginCredentials,
+  RegisterCredentials,
+  User
+} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:5000/api/auth';
+
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 
@@ -24,18 +31,20 @@ export class AuthService {
   }
 
   register(credentials: RegisterCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, credentials)
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/register`, credentials)
       .pipe(
-        tap(response => {
+        tap((response: AuthResponse) => {
           this.saveUserData(response);
         })
       );
   }
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
-        tap(response => {
+        tap((response: AuthResponse) => {
           this.saveUserData(response);
         })
       );
@@ -61,6 +70,7 @@ export class AuthService {
       email: response.email,
       createdAt: new Date()
     };
+
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('token', response.token);
     this.currentUserSubject.next(user);
