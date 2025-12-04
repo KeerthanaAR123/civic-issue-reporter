@@ -1,0 +1,155 @@
+<div class="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto" @fadeIn>
+
+    <div class="flex justify-between items-end mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">
+          <span *ngIf="authService.isAdmin()">Admin Dashboard</span>
+          <span *ngIf="!authService.isAdmin()">Welcome, {{ authService.currentUser()?.user?.name }}!</span>
+        </h1>
+        <p class="text-gray-500 mt-1">
+          <span *ngIf="authService.isAdmin()">Manage and resolve community issues.</span>
+          <span *ngIf="!authService.isAdmin()">Track your reports and impact.</span>
+        </p>
+      </div>
+      <button (click)="authService.logout()" class="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-600 rounded-lg font-bold hover:bg-red-100 transition border border-red-100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Logout
+      </button>
+    </div>
+
+    <div *ngIf="authService.isAdmin()" class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div class="text-gray-500 text-xs font-bold uppercase tracking-wider">Total Issues</div>
+          <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.total }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-400">
+          <div class="text-yellow-600 text-xs font-bold uppercase tracking-wider">Pending</div>
+          <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.pending }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+          <div class="text-blue-600 text-xs font-bold uppercase tracking-wider">In Progress</div>
+          <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.inProgress }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+          <div class="text-green-600 text-xs font-bold uppercase tracking-wider">Resolved</div>
+          <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.resolved }}</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+          <div class="flex gap-4 flex-wrap">
+            <div class="flex-1 min-w-64">
+              <label class="block text-xs font-bold text-gray-600 mb-2 uppercase">Filter by Category</label>
+              <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                <option value="">All Categories</option>
+                <option *ngFor="let cat of categoryOptions" [value]="cat">{{ cat }}</option>
+              </select>
+            </div>
+            <div class="flex-1 min-w-64">
+              <label class="block text-xs font-bold text-gray-600 mb-2 uppercase">Filter by Status</label>
+              <select [(ngModel)]="selectedStatus" (change)="onCategoryChange()" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                <option value="">All Statuses</option>
+                <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="text-xs font-bold text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
+              <th class="px-6 py-4">Title</th>
+              <th class="px-6 py-4">Reporter</th>
+              <th class="px-6 py-4">Category</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr *ngFor="let issue of issues" class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4">
+                <div class="font-bold text-gray-900">{{ issue.title }}</div>
+                <div class="text-xs text-gray-500">{{ issue.address }}</div>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">{{ issue.user?.name || 'Unknown' }}</td>
+              <td class="px-6 py-4 text-sm text-gray-600">{{ issue.category }}</td>
+              <td class="px-6 py-4">
+                <select [ngModel]="issue.status" (ngModelChange)="onStatusChange(issue, $event)" 
+                        class="bg-white border border-gray-300 text-gray-700 text-xs rounded-lg p-2 font-bold cursor-pointer shadow-sm focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let s of statusOptions" [value]="s">{{s}}</option>
+                </select>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button (click)="deleteIssue(issue._id)" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="issues.length === 0" class="text-center py-8 text-gray-500">
+          No issues found
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!authService.isAdmin()" class="space-y-8">
+      
+      <div class="flex flex-col md:flex-row gap-4 justify-between">
+        <div class="relative flex-1 max-w-lg">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </span>
+          <input type="text" placeholder="Search issues by location..." class="w-full py-3 pl-10 pr-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition shadow-sm">
+        </div>
+        <a routerLink="/report-issue" class="bg-primary hover:bg-teal-800 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
+          <span>+</span> Report New Issue
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let issue of issues" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition group">
+          <div class="h-48 rounded-xl overflow-hidden relative mb-4 bg-gray-100">
+            <img [src]="getImageUrl(issue)" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold bg-white/90 backdrop-blur border shadow-sm" [ngClass]="getStatusColor(issue.status)">
+              {{ issue.status }}
+            </span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-1">{{ issue.title }}</h3>
+          <p class="text-gray-500 text-sm mb-2 line-clamp-2">{{ issue.description }}</p>
+          <div class="text-xs text-gray-400 mb-4">
+            <span class="inline-block bg-gray-100 px-2 py-1 rounded">{{ issue.category }}</span>
+          </div>
+
+          <!-- Admin Response Section -->
+          <div *ngIf="issue.adminResponse" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="flex items-start gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 flex-shrink-0 mt-0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-blue-700 mb-1">Admin Response</div>
+                <p class="text-sm text-gray-700 leading-relaxed">{{ issue.adminResponse }}</p>
+                <div class="text-xs text-blue-600 mt-2">{{ issue.responseDate | date: 'MMM d, yyyy h:mm a' }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+             <div class="flex items-center text-gray-400 text-xs gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                {{ issue.address }}
+             </div>
+             <button (click)="deleteIssue(issue._id)" class="text-sm font-medium text-red-400 hover:text-red-600 hover:underline">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="issues.length === 0" class="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-gray-200">
+        <h3 class="text-xl font-bold text-gray-900">No issues yet</h3>
+        <p class="text-gray-500">Reports you submit will appear here.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ccfbf1"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="1200" height="500" fill="url(#skyGrad)"/>
+  
+  <!-- Ground -->
+  <rect y="500" width="1200" height="300" fill="url(#groundGrad)"/>
+  
+  <!-- Buildings (representing smart city) -->
+  <g fill="#ffffff" opacity="0.9">
+    <!-- Building 1 -->
+    <rect x="100" y="350" width="120" height="180" rx="8"/>
+    <!-- Windows -->
+    <circle cx="115" cy="370" r="4" fill="#0f766e"/>
+    <circle cx="135" cy="370" r="4" fill="#0f766e"/>
+    <circle cx="155" cy="370" r="4" fill="#0f766e"/>
+    <circle cx="115" cy="395" r="4" fill="#0f766e"/>
+    <circle cx="135" cy="395" r="4" fill="#0f766e"/>
+    <circle cx="155" cy="395" r="4" fill="#0f766e"/>
+    <circle cx="115" cy="420" r="4" fill="#0f766e"/>
+    <circle cx="135" cy="420" r="4" fill="#0f766e"/>
+    <circle cx="155" cy="420" r="4" fill="#0f766e"/>
+    
+    <!-- Building 2 -->
+    <rect x="350" y="280" width="140" height="250" rx="8"/>
+    <!-- Windows -->
+    <circle cx="367" cy="305" r="4" fill="#0f766e"/>
+    <circle cx="391" cy="305" r="4" fill="#0f766e"/>
+    <circle cx="415" cy="305" r="4" fill="#0f766e"/>
+    <circle cx="367" cy="335" r="4" fill="#0f766e"/>
+    <circle cx="391" cy="335" r="4" fill="#0f766e"/>
+    <circle cx="415" cy="335" r="4" fill="#0f766e"/>
+    <circle cx="367" cy="365" r="4" fill="#0f766e"/>
+    <circle cx="391" cy="365" r="4" fill="#0f766e"/>
+    <circle cx="415" cy="365" r="4" fill="#0f766e"/>
+    
+    <!-- Building 3 -->
+    <rect x="650" y="320" width="130" height="210" rx="8"/>
+    <!-- Windows -->
+    <circle cx="667" cy="345" r="4" fill="#0f766e"/>
+    <circle cx="690" cy="345" r="4" fill="#0f766e"/>
+    <circle cx="713" cy="345" r="4" fill="#0f766e"/>
+    <circle cx="667" cy="375" r="4" fill="#0f766e"/>
+    <circle cx="690" cy="375" r="4" fill="#0f766e"/>
+    <circle cx="713" cy="375" r="4" fill="#0f766e"/>
+    
+    <!-- Building 4 -->
+    <rect x="900" y="370" width="115" height="160" rx="8"/>
+    <!-- Windows -->
+    <circle cx="915" cy="390" r="4" fill="#0f766e"/>
+    <circle cx="935" cy="390" r="4" fill="#0f766e"/>
+    <circle cx="915" cy="415" r="4" fill="#0f766e"/>
+    <circle cx="935" cy="415" r="4" fill="#0f766e"/>
+  </g>
+  
+  <!-- Trees/Parks (green spaces) -->
+  <g fill="#059669">
+    <circle cx="250" cy="480" r="35"/>
+    <rect x="240" y="515" width="20" height="40" fill="#78350f"/>
+    <circle cx="800" cy="500" r="40"/>
+    <rect x="788" y="540" width="24" height="45" fill="#78350f"/>
+  </g>
+  
+  <!-- Street lights -->
+  <g stroke="#0f766e" stroke-width="2" fill="none">
+    <line x1="180" y1="530" x2="180" y2="450"/>
+    <circle cx="180" cy="440" r="12" fill="#fbbf24"/>
+    <line x1="500" y1="530" x2="500" y2="450"/>
+    <circle cx="500" cy="440" r="12" fill="#fbbf24"/>
+    <line x1="1000" y1="530" x2="1000" y2="450"/>
+    <circle cx="1000" cy="440" r="12" fill="#fbbf24"/>
+  </g>
+  
+  <!-- GPS/Location pin (floating) -->
+  <g>
+    <circle cx="150" cy="150" r="40" fill="#06b6d4" opacity="0.2"/>
+    <circle cx="150" cy="150" r="30" fill="#06b6d4" opacity="0.3"/>
+    <path d="M150 130 L160 155 L150 180 L140 155 Z" fill="#0f766e" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="150" cy="155" r="5" fill="#ffffff"/>
+  </g>
+  
+  <!-- Report icon (floating) -->
+  <g opacity="0.8">
+    <rect x="1050" y="80" width="80" height="80" rx="12" fill="#06b6d4" opacity="0.15"/>
+    <path d="M1070 110 L1070 150 M1090 110 L1090 150 M1110 110 L1110 150 M1070 130 L1110 130" stroke="#0f766e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Floating text -->
+  <text x="80" y="80" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" fill="#ffffff">
+    CivicReporter
+  </text>
+  <text x="80" y="120" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#ffffff" opacity="0.95">
+    Smart City. Better Communities.
+  </text>
+</svg>

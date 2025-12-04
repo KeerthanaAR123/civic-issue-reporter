@@ -1,0 +1,87 @@
+<div class="min-h-screen bg-bgLight p-8">
+  
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-800">Admin Dashboard</h2>
+      <p class="text-gray-500 mt-1">Manage and resolve community issues</p>
+    </div>
+    <a routerLink="/report-issue" class="bg-primary hover:bg-teal-800 text-white px-6 py-3 rounded-lg shadow-md font-medium transition flex items-center gap-2">
+      <span>+</span> Report New Issue
+    </a>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <h3 class="text-4xl font-bold text-gray-800 mb-1">{{ stats.total }}</h3>
+      <p class="text-gray-500 font-medium">Total Issues</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+      <h3 class="text-4xl font-bold text-green-600 mb-1">{{ stats.resolved }}</h3>
+      <p class="text-gray-500 font-medium">Resolved Issues</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+      <h3 class="text-4xl font-bold text-blue-600 mb-1">{{ stats.inProgress }}</h3>
+      <p class="text-gray-500 font-medium">Issues In Progress</p>
+    </div>
+
+     <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
+      <h3 class="text-4xl font-bold text-yellow-600 mb-1">{{ stats.pending }}</h3>
+      <p class="text-gray-500 font-medium">Pending</p>
+    </div>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow-sm mb-6 flex items-center border border-gray-100">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <input type="text" placeholder="Search issues..." class="ml-3 flex-1 outline-none text-gray-600 placeholder-gray-400">
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-gray-50 border-b border-gray-100">
+          <tr>
+            <th class="p-5 font-semibold text-gray-600 text-sm uppercase tracking-wider">Title</th>
+            <th class="p-5 font-semibold text-gray-600 text-sm uppercase tracking-wider">Location</th>
+            <th class="p-5 font-semibold text-gray-600 text-sm uppercase tracking-wider">Status</th>
+            <th class="p-5 font-semibold text-gray-600 text-sm uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr *ngFor="let issue of issues" class="hover:bg-gray-50 transition duration-150">
+            <td class="p-5">
+              <div class="font-bold text-gray-800">{{ issue.title }}</div>
+              <div class="text-xs text-gray-500 mt-1">{{ issue.category }}</div>
+            </td>
+            <td class="p-5 text-gray-600 text-sm max-w-xs truncate">{{ issue.location }}</td>
+            <td class="p-5">
+              <span [ngClass]="{
+                'bg-green-100 text-green-700': issue.status === 'Resolved',
+                'bg-blue-100 text-blue-700': issue.status === 'In Progress',
+                'bg-red-100 text-red-700': issue.status === 'Rejected',
+                'bg-yellow-100 text-yellow-700': issue.status === 'Reported'
+              }" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                {{ issue.status }}
+              </span>
+            </td>
+            <td class="p-5 text-right space-x-2">
+              <button class="text-blue-500 hover:text-blue-700 bg-blue-50 p-2 rounded-lg transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+              <button class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

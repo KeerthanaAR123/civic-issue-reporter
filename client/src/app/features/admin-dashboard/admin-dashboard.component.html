@@ -1,0 +1,192 @@
+<div class="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto" @fadeIn>
+
+    <!-- Header -->
+    <div class="flex justify-between items-end mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p class="text-gray-500 mt-1">Manage and respond to community issues</p>
+      </div>
+      <button (click)="authService.logout()" class="flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-600 rounded-lg font-bold hover:bg-red-100 transition border border-red-100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Logout
+      </button>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+        <div class="text-gray-500 text-xs font-bold uppercase tracking-wider">Total Issues</div>
+        <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.total }}</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-400 hover:shadow-md transition">
+        <div class="text-yellow-600 text-xs font-bold uppercase tracking-wider">Pending</div>
+        <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.pending }}</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition">
+        <div class="text-blue-600 text-xs font-bold uppercase tracking-wider">In Progress</div>
+        <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.inProgress }}</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition">
+        <div class="text-green-600 text-xs font-bold uppercase tracking-wider">Resolved</div>
+        <div class="text-4xl font-extrabold text-gray-900 mt-2">{{ stats.resolved }}</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+      <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+        <div class="flex gap-4 flex-wrap">
+          <div class="flex-1 min-w-64">
+            <label class="block text-xs font-bold text-gray-600 mb-2 uppercase">Filter by Category</label>
+            <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm font-medium hover:border-gray-400 focus:border-primary focus:ring-1 focus:ring-primary/20 transition">
+              <option value="">All Categories</option>
+              <option *ngFor="let cat of categoryOptions" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+          <div class="flex-1 min-w-64">
+            <label class="block text-xs font-bold text-gray-600 mb-2 uppercase">Filter by Status</label>
+            <select [(ngModel)]="selectedStatus" (change)="onCategoryChange()" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm font-medium hover:border-gray-400 focus:border-primary focus:ring-1 focus:ring-primary/20 transition">
+              <option value="">All Status</option>
+              <option value="Reported">Reported</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issues Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+        <h3 class="font-bold text-lg text-gray-900">All Reported Issues</h3>
+      </div>
+      
+      <div *ngIf="issues.length === 0" class="text-center py-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+        <p class="text-gray-500 font-medium">No issues found</p>
+      </div>
+
+      <table *ngIf="issues.length > 0" class="w-full text-left border-collapse">
+        <thead>
+          <tr class="text-xs font-bold text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
+            <th class="px-6 py-4">Issue Details</th>
+            <th class="px-6 py-4">Reporter</th>
+            <th class="px-6 py-4">Category</th>
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">Response</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr *ngFor="let issue of issues" class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4">
+              <div class="flex gap-3">
+                <img [src]="getImageUrl(issue)" alt="Issue" class="w-12 h-12 rounded-lg object-cover border border-gray-200">
+                <div>
+                  <div class="font-bold text-gray-900">{{ issue.title }}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">{{ issue.address }}</div>
+                  <div class="text-xs text-gray-400 mt-1">📅 {{ issue.date | date: 'short' }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="font-medium text-gray-900">{{ issue.user?.name || 'Unknown' }}</div>
+              <div class="text-xs text-gray-500">{{ issue.user?.email || '-' }}</div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-block px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-700 rounded-full">
+                {{ issue.category }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <select [ngModel]="issue.status" (ngModelChange)="onStatusChange(issue, $event)" 
+                      class="border border-gray-300 rounded-lg p-2 text-xs font-bold cursor-pointer bg-white hover:border-gray-400 focus:border-primary focus:ring-1 focus:ring-primary/20" 
+                      [ngClass]="getStatusColor(issue.status)">
+                <option value="Reported">Reported</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm">
+                <p *ngIf="issue.adminResponse" class="text-green-700 font-medium line-clamp-2">
+                  ✓ Responded
+                </p>
+                <p *ngIf="!issue.adminResponse" class="text-gray-400">
+                  No response yet
+                </p>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <button (click)="openResponseModal(issue)" class="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition border border-blue-200" title="Add/Edit Response">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19H4v-3L16.5 3.5z"></path></svg>
+                  Reply
+                </button>
+                <button (click)="deleteIssue(issue._id)" class="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition border border-red-200" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Response Modal -->
+  <div *ngIf="showResponseModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto">
+      <div class="sticky top-0 bg-gradient-to-r from-primary to-teal-700 text-white p-6 flex justify-between items-center border-b">
+        <div>
+          <h2 class="text-2xl font-bold">{{ selectedIssue?.title }}</h2>
+          <p class="text-white/80 text-sm mt-1">Respond to this citizen's report</p>
+        </div>
+        <button (click)="closeResponseModal()" class="text-white hover:bg-white/20 p-2 rounded-lg transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <!-- Issue Details -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-bold text-gray-900 mb-3">Issue Details</h3>
+          <div class="space-y-2 text-sm">
+            <div><span class="text-gray-600">Reporter:</span> <span class="font-medium">{{ selectedIssue?.user?.name }}</span></div>
+            <div><span class="text-gray-600">Email:</span> <span class="font-medium">{{ selectedIssue?.user?.email }}</span></div>
+            <div><span class="text-gray-600">Category:</span> <span class="font-medium">{{ selectedIssue?.category }}</span></div>
+            <div><span class="text-gray-600">Location:</span> <span class="font-medium">{{ selectedIssue?.address }}</span></div>
+            <div><span class="text-gray-600">Status:</span> <span class="font-medium" [ngClass]="getStatusColor(selectedIssue?.status)">{{ selectedIssue?.status }}</span></div>
+            <div><span class="text-gray-600">Description:</span> <span class="font-medium block mt-1">{{ selectedIssue?.description }}</span></div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div *ngIf="selectedIssue?.imageUrl" class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-bold text-gray-900 mb-3">Issue Image</h3>
+          <img [src]="getImageUrl(selectedIssue)" alt="Issue Image" class="max-w-full rounded-lg max-h-64">
+        </div>
+
+        <!-- Response Form -->
+        <div>
+          <label class="block text-sm font-bold text-gray-900 mb-2">Your Response</label>
+          <textarea [(ngModel)]="adminResponse" placeholder="Enter your response to this citizen report. Explain what actions will be taken..." rows="6" class="w-full border border-gray-300 rounded-lg p-4 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition resize-none"></textarea>
+          <p class="text-xs text-gray-500 mt-2">{{ adminResponse.length }}/500 characters</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-3 justify-end pt-4 border-t border-gray-200">
+          <button (click)="closeResponseModal()" class="px-6 py-2.5 border border-gray-300 rounded-lg font-bold text-gray-700 hover:bg-gray-50 transition">
+            Cancel
+          </button>
+          <button (click)="submitResponse()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-bold hover:bg-teal-800 transition shadow-lg">
+            Send Response
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
